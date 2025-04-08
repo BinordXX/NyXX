@@ -1,0 +1,47 @@
+{
+    "agents": [
+      {
+        "agent_id": 1,
+        "type": "trader",
+        "initial_resources": 1000,
+        "decision_making": {
+          "strategy": "risk-averse",
+          "priority": "profit-maximization"
+        },
+        "attributes": {
+          "name": "Trader_Alpha",
+          "max_tasks": 5,
+          "speed": "fast"
+        }
+      },
+      {
+        "agent_id": 2,
+        "type": "researcher",
+        "initial_resources": 500,
+        "decision_making": {
+          "strategy": "data-driven",
+          "priority": "knowledge-acquisition"
+        },
+        "attributes": {
+          "name": "Researcher_Beta",
+          "max_tasks": 3,
+          "speed": "medium"
+        }
+      },
+      {
+        "agent_id": 3,
+        "type": "optimizer",
+        "initial_resources": 800,
+        "decision_making": {
+          "strategy": "optimization",
+          "priority": "efficiency"
+        },
+        "attributes": {
+          "name": "Optimizer_Gamma",
+          "max_tasks": 4,
+          "speed": "medium"
+        }
+      }
+    ]
+  }
+  

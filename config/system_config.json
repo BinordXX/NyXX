@@ -1,0 +1,33 @@
+{
+    "system": {
+      "name": "NyXX Digital Civilization",
+      "version": "1.0",
+      "description": "A system for managing digital agents and their interactions within a simulated economy and environment.",
+      "logs": {
+        "path": "./logs/",
+        "level": "INFO",
+        "log_rotation": "daily"
+      }
+    },
+    "data_paths": {
+      "raw_data": "./data/raw_data/",
+      "processed_data": "./data/processed_data/",
+      "logs": "./data/logs/"
+    },
+    "agent_params": {
+      "max_agents": 100,
+      "min_agents": 10,
+      "default_resources": 500
+    },
+    "simulation": {
+      "start_time": "2025-01-01T00:00:00Z",
+      "end_time": "2025-12-31T23:59:59Z",
+      "cycle_duration": 3600
+    },
+    "environment": {
+      "market_open": true,
+      "market_start_time": "2025-01-01T00:00:00Z",
+      "market_end_time": "2025-12-31T23:59:59Z"
+    }
+  }
+  
