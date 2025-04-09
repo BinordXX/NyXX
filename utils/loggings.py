@@ -41,3 +41,15 @@ logger = setup_logger()
 
 # Optionally, write some initial log messages (you can remove these later)
 logger.info("Logger initialized and ready.")
+# utils/loggings.py
+
+# Set up a basic configuration for logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# Function to log informational messages
+def log_info(message):
+    logging.info(message)
+
+# Function to log error messages
+def log_error(message):
+    logging.error(message)

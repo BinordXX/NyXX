@@ -1,6 +1,6 @@
 # NyXX/encephalon/feedback_loop.py
 
-from NyXX.utils.logging import log_info, log_error
+from utils.loggings import log_info, log_error
 
 
 class FeedbackLoop:

@@ -1,6 +1,6 @@
 # digital_civilization/agents/agent_types/optimizer.py
 
-from agents.agent import Agent
+from ..agent import Agent
 import numpy as np
 import random
 from datetime import datetime
@@ -10,28 +10,46 @@ class OptimizerAgent(Agent):
         super().__init__(name=name, role="Optimizer", capabilities=["tune", "evolve", "refactor"])
         self.objective = objective
         self.optimization_log = []
+        self.resources = 0  # Add this if the agent doesn't manage resources.
+        self.reputation = 0  # Reputation attribute.
+        self.portfolio = {}  # Or any other necessary attributes.
 
-    def perform_task(self, task: dict) -> dict:
+    def perform_task(self, task):
         """
-        Executes optimizer-related tasks.
-        Example task:
-        {
-            "type": "tune",
-            "params": {"learning_rate": [0.01, 0.1, 0.001]},
-            "metric_fn": some_function
+        Performs market analysis and returns insights.
+        """
+        market_data = task.get("market_data", {})
+        if not market_data:
+            return {"agent_id": self.agent_id, "insights": None}
+
+        # Simple analysis: compute volatility or other stats
+        insights = {}
+        for item, prices in market_data.items():
+            if len(prices) > 1:
+                avg_price = sum(prices) / len(prices)
+                volatility = max(prices) - min(prices)
+                insights[item] = {
+                    "average_price": avg_price,
+                    "volatility": volatility
+                }
+
+        return {
+            "agent_id": self.agent_id,
+            "insights": insights
         }
+    def execute_task(self, environment):
         """
-        task_type = task.get("type")
+        Executes optimization tasks based on environment data.
+        Constructs a task from the environment and delegates to perform_task.
+        """
+        market_data = environment.get_market_data("default_market")  # Replace or infer as needed
+        task = {
+            "type": "optimize",
+            "market_data": market_data
+        }
+        return self.perform_task(task)
 
-        if task_type == "tune":
-            return self._hyperparameter_tuning(task.get("params"), task.get("metric_fn"))
-        elif task_type == "evolve":
-            return self._genetic_optimize(task.get("population", []), task.get("fitness_fn"))
-        elif task_type == "refactor":
-            return self._refactor_logic(task.get("codebase", {}))
-        else:
-            self.log_event(f"Unsupported task type: {task_type}")
-            return {"status": "failed", "reason": "unsupported task"}
+
 
     def _hyperparameter_tuning(self, params: dict, metric_fn) -> dict:
         """
@@ -98,3 +116,19 @@ class OptimizerAgent(Agent):
         """
         from itertools import product
         return list(product(*param_grid.values()))
+    def evaluate_performance(self, environment):
+        """
+        Evaluates the performance of the optimizer based on the optimization results.
+        This could involve the success of optimization tasks, how close the results are
+        to the desired goal, or how many optimizations were successfully completed.
+        """
+        performance_score = 0
+        # Example performance evaluation based on the number of successful optimizations
+        if self.optimization_log:
+            # For simplicity, we consider the number of successful optimizations as the performance metric
+            performance_score = len(self.optimization_log)  # Count of optimizations done
+
+        # Log the performance evaluation
+        self.logger.info(f"Optimizer {self.name} with ID {self.agent_id} has performance score: {performance_score}")
+
+        return performance_score

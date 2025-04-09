@@ -1,6 +1,6 @@
 # digital_civilization/agents/agent_types/analyst.py
 
-from agents.agent import Agent
+from ..agent import Agent
 from datetime import datetime
 import numpy as np
 
@@ -9,26 +9,47 @@ class AnalystAgent(Agent):
         super().__init__(name=name, role="Analyst", capabilities=["interpret", "predict", "recommend"])
         self.domain = domain
         self.insights_archive = []
+        self.resources = 100  # Add this if the agent doesn't manage resources.
+        self.reputation = 3  # Reputation attribute.
+        self.portfolio = {}  # Or any other necessary attributes.
 
-    def perform_task(self, task: dict) -> dict:
+
+    def execute_task(self, environment):
         """
-        Executes analyst-related tasks.
-        Example task:
-        {
-            "type": "interpret",
-            "data": [...]
+        Executes optimization tasks based on environment data.
+        Constructs a task from the environment and delegates to perform_task.
+        """
+        market_data = environment.get_market_data("default_market")  # Replace or infer as needed
+        task = {
+            "type": "optimize",
+            "market_data": market_data
         }
+        return self.perform_task(task)
+
+    def perform_task(self, task):
         """
-        task_type = task.get("type")
-        if task_type == "interpret":
-            return self._interpret_insights(task.get("data", []))
-        elif task_type == "predict":
-            return self._predict_outcomes(task.get("trend_data", []))
-        elif task_type == "recommend":
-            return self._recommend_action(task.get("context", {}))
-        else:
-            self.log_event(f"Unsupported task type: {task_type}")
-            return {"status": "failed", "reason": "unsupported task"}
+        Performs market analysis and returns insights.
+        """
+        market_data = task.get("market_data", {})
+        if not market_data:
+            return {"agent_id": self.agent_id, "insights": None}
+
+        # Simple analysis: compute volatility or other stats
+        insights = {}
+        for item, prices in market_data.items():
+            if len(prices) > 1:
+                avg_price = sum(prices) / len(prices)
+                volatility = max(prices) - min(prices)
+                insights[item] = {
+                    "average_price": avg_price,
+                    "volatility": volatility
+                }
+
+        return {
+            "agent_id": self.agent_id,
+            "insights": insights
+        }
+
 
     def _interpret_insights(self, data: list) -> dict:
         """
@@ -89,3 +110,28 @@ class AnalystAgent(Agent):
 
         self.log_event(f"Recommendation made for {domain}: {action}")
         return {"status": "success", "recommendation": recommendation}
+    def execute_task(self, environment):
+        """
+        Executes analytical tasks based on environment data.
+        Constructs an analysis task and delegates to perform_task.
+        """
+        market_data = environment.get_market_data("default_market")  # Replace with dynamic market if needed
+        task = {
+            "type": "analysis",
+            "market_data": market_data
+        }
+        return self.perform_task(task)
+    def evaluate_performance(self, environment):
+        """
+        Evaluates the performance of the analyst agent based on the insights produced.
+        This could be based on the number of valuable insights, their relevance, etc.
+        """
+        performance_score = 0
+        # Example performance evaluation based on the number of insights
+        if self.insights_archive:
+            performance_score = len(self.insights_archive)  # Score based on insights count
+
+        # Log the performance evaluation
+        self.logger.info(f"Analyst {self.name} with ID {self.agent_id} has performance score: {performance_score}")
+
+        return performance_score

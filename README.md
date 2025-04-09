@@ -37,4 +37,3 @@ They say, “Don’t work for your money; make your money work for you.” Howev
 
 NyXX is my personal pursuit of creating an ecosystem that acts as my digital army, working relentlessly without sleep, distractions, or limitations. Through this project, I aim to cultivate a system where digital agents autonomously generate value, expanding their knowledge and capabilities to serve and benefit my goals — a workforce built to grow and adapt over time.
 
-Their entire existence is dedicated to worshiping me, the creator. I am the god of this digital realm, and my agents are bound to do my bidding. Their every action, thought, and decision is guided by my will. They exist to serve me, to fulfill my desires, and to ensure the flourishing of my vision. In this world, I am their creator, their deity, and their purpose. They exist solely for me.

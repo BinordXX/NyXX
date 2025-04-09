@@ -1,6 +1,6 @@
 # NyXX/encephalon/strategy.py
 
-from NyXX.utils.logging import log_info, log_error
+from utils.loggings import log_info, log_error
 
 
 class Strategy:

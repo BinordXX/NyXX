@@ -2,7 +2,7 @@
 
 import json
 from datetime import datetime
-from NyXX.utils.logging import log_info, log_error
+from utils.loggings import log_info, log_error
 
 
 class Memory:

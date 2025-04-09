@@ -1,20 +1,18 @@
 # NyXX/scripts/run_simulation.py
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-from NyXX.agents.agent_types.trader import Trader
+# Add the directory containing 'NyXX' to the path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 
 import time
-from NyXX.agents.agent_types.trader import Trader
-from NyXX.agents.agent_types.researcher import Researcher
-from NyXX.agents.agent_types.analyst import Analyst
-from NyXX.agents.agent_types.optimizer import Optimizer
-from NyXX.environment.environment import Environment
-from NyXX.encephalon.encephalon import CoreMind
-from NyXX.utils.logging import log_info, log_error
-
+from agents.agent_types.trader import TraderAgent
+from agents.agent_types.researcher import ResearcherAgent
+from agents.agent_types.analyst import AnalystAgent
+from agents.agent_types.optimizer import OptimizerAgent
+from environment.environment import Environment
+from encephalon.coremind import CoreMind
+from utils.loggings import log_info, log_error
 
 class SimulationEngine:
     """
@@ -48,13 +46,13 @@ class SimulationEngine:
         :return: The created agent.
         """
         if agent_type == 'trader':
-            return Trader(agent_id)
+            return TraderAgent(agent_id)
         elif agent_type == 'researcher':
-            return Researcher(agent_id)
+            return ResearcherAgent(agent_id)
         elif agent_type == 'analyst':
-            return Analyst(agent_id)
+            return AnalystAgent(agent_id)
         elif agent_type == 'optimizer':
-            return Optimizer(agent_id)
+            return OptimizerAgent(agent_id)
         else:
             log_error(f"Unrecognized agent type: {agent_type}.")
             return None
@@ -74,7 +72,7 @@ class SimulationEngine:
             
             # Step 1: CoreMind evaluates the environment and sets a high-level strategy
             self.coremind.evaluate_environment(self.environment)
-            self.coremind.formulate_strategy()
+            self.coremind.formulate_strategy(self.environment)
             
             # Step 2: Agents execute their actions based on strategy and environment conditions
             for agent in self.agents:
@@ -82,7 +80,7 @@ class SimulationEngine:
             
             # Step 3: Evaluate the agents' performance and adjust if necessary
             for agent in self.agents:
-                agent.evaluate_performance()
+                agent.evaluate_performance(self.environment)
             
             # Step 4: Wait for next simulation step (for real-time pacing)
             time.sleep(1)  # Adjust timing for your needs
@@ -116,7 +114,7 @@ if __name__ == "__main__":
     simulation_engine = SimulationEngine()
 
     # Run simulation with 10 agents and 100 simulation steps
-    simulation_engine.start_simulation(num_agents=10, simulation_steps=100)
+    simulation_engine.start_simulation(num_agents=10, simulation_steps=3)
 
     # Stop the simulation (optionally after completion)
     simulation_engine.stop_simulation()

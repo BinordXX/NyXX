@@ -1,6 +1,6 @@
 # digital_civilization/agents/agent_types/researcher.py
 
-from agents.agent import Agent
+from ..agent import Agent
 import random
 from datetime import datetime
 import math
@@ -11,6 +11,9 @@ class ResearcherAgent(Agent):
         self.domain = domain
         self.knowledge_base = {}  # concept -> insight
         self.research_log = []
+        self.resources = 100  # Add this if the agent doesn't manage resources.
+        self.reputation = 5  # Reputation attribute.
+        self.portfolio = {}  # Or any other necessary attributes.
 
     def perform_task(self, task: dict) -> dict:
         """
@@ -55,6 +58,7 @@ class ResearcherAgent(Agent):
         self.research_log.append(insight)
         self.log_event(f"Analyzed data: mean={mean:.2f}, std_dev={std_dev:.2f}")
         return {"status": "success", "insight": insight}
+    
 
     def _generate_hypothesis(self, topic: str) -> dict:
         """
@@ -78,3 +82,30 @@ class ResearcherAgent(Agent):
         self.research_log.append(result)
         self.log_event(f"Ran experiment with result: {outcome}")
         return {"status": "success", "result": result}
+    def execute_task(self, environment):
+        """
+        Wrapper method for compatibility with the simulation engine.
+        ResearcherAgent performs research based on market data.
+        """
+        market_data = environment.get_market_data("default_market")  # Adjust market name as needed
+        task = {
+            "type": "research",
+            "market_data": market_data
+        }
+        return self.perform_task(task)
+    def evaluate_performance(self, environment):
+        """
+        Evaluates the performance of the researcher in the given environment.
+        This can include checking if the agent's research goals are met, 
+        if the agent's contributions are being utilized, etc.
+        """
+        # Example of evaluation logic
+        performance_score = 0
+        # For simplicity, assume you check the presence of certain research data
+        if self.research_log:
+            performance_score = len(self.research_log)  # Score based on the number of research outputs
+
+        # Log the performance evaluation
+        self.logger.info(f"Researcher {self.name} with ID {self.agent_id} has performance score: {performance_score}")
+        
+        return performance_score

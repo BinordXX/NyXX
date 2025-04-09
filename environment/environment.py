@@ -1,10 +1,14 @@
 # NyXX/encephalon/environment.py
 
 import random
-from NyXX.utils.logging import log_info, log_error
+from utils.loggings import log_info, log_error
 
 
 class Environment:
+    
+    
+    # Other methods related to the environment
+
     """
     The Environment class represents the virtual ecosystem where agents interact.
     It serves as the world in which agents perform their tasks, trade, and make decisions.
@@ -16,8 +20,15 @@ class Environment:
         Set up necessary resources such as simulated markets, external data, and scenarios.
         """
         self.markets = {}  # Dictionary to hold market states
+        self.agents = []   # Initialize the agents list to store agents.
         self.external_data_sources = []  # List of external data sources (e.g., APIs)
         self.scenarios = []  # List of pre-configured scenarios for testing agent behaviors
+
+    def add_agent(self, agent):
+        """Method to add an agent to the environment."""
+        self.agents.append(agent)
+        print(f"Agent {agent.agent_id} added to the environment.")
+    
 
     def add_market(self, market_name, market_data):
         """

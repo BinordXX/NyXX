@@ -10,6 +10,10 @@ class TraderAgent(Agent):
         self.trading_strategy = trading_strategy
         self.balance = 1000.0  # virtual currency
         self.portfolio = {}  # item -> quantity
+        self.resources = 100 # Define resources attribute, e.g., starting with 100 units
+        self.reputation = 0  # Initialize reputation attribute if needed
+
+    
 
     def perform_task(self, task: dict) -> dict:
         """
@@ -77,3 +81,44 @@ class TraderAgent(Agent):
                 "price": price,
                 "timestamp": timestamp
             }
+    def execute_task(self, environment):
+        """
+        Wrapper method expected by the simulation engine.
+        Constructs a task from the environment and delegates to perform_task.
+        """
+        # Extract market data from environment
+        market_data = environment.get_market_data("CryptoMarket")  # You may need to implement this
+        task = {
+            "type": "trade",
+            "market_data": market_data
+        }
+        return self.perform_task(task)
+    def evaluate_performance(self, environment) -> dict:
+        """
+        Evaluate agent's performance, e.g., by checking profit/loss and portfolio value.
+        Returns a dict summary.
+        """
+        # Calculate total value based on the agent's resources and portfolio
+        total_value = self.resources  # Start with current resources (resources or balance as per previous context)
+        market_data = environment.get_market_data("CryptoMarket")  # Adjust if you use market names
+
+        # Loop through the portfolio and calculate its value based on the market data
+        for item, quantity in self.portfolio.items():
+            price = market_data.get(item, 0)  # Default to 0 if no price data is available
+            total_value += price * quantity
+
+        # Calculate the performance score as a combination of resources and reputation
+        performance_score = self.resources + self.reputation  # Example performance metric
+
+        # Log the agent's performance
+        self.logger.info(f"Trader {self.name} performance: Resources={self.resources}, Reputation={self.reputation}, Performance Score={performance_score}")
+
+        # Return the performance as a dictionary summary
+        return {
+            "agent_id": self.agent_id,  # Correct agent ID to be used here
+            "total_value": total_value,  # Total value includes resources and portfolio value
+            "performance_score": performance_score,  # Include performance score for this agent
+            "resources": self.resources,  # Include resources for clarity
+            "reputation": self.reputation,  # Include reputation for reference
+            "portfolio": self.portfolio.copy()  # Return a copy of the portfolio for safety
+        }
