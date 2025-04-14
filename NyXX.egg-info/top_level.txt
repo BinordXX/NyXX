@@ -1,10 +1,10 @@
-agents
 config
 data
 economy
 encephalon
 environment
 ethics
+organisms
 scripts
 tests
 utils

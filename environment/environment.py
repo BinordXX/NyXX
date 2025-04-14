@@ -1,88 +1,94 @@
-# NyXX/encephalon/environment.py
-
 import random
+from typing import List
 from utils.loggings import log_info, log_error
-
+from organisms.citizen import Citizen
+from environment.data_provider import BasicDataSource  # Import the basic data source class
 
 class Environment:
-    
-    
-    # Other methods related to the environment
-
     """
-    The Environment class represents the virtual ecosystem where agents interact.
-    It serves as the world in which agents perform their tasks, trade, and make decisions.
+    The Environment class represents the world where all digital organisms—citizens and agents—live.
+    This is the central simulation space where citizens learn, grow, and evolve into agents.
     """
 
-    def __init__(self):
-        """
-        Initialize the environment.
-        Set up necessary resources such as simulated markets, external data, and scenarios.
-        """
-        self.markets = {}  # Dictionary to hold market states
-        self.agents = []   # Initialize the agents list to store agents.
-        self.external_data_sources = []  # List of external data sources (e.g., APIs)
-        self.scenarios = []  # List of pre-configured scenarios for testing agent behaviors
+    def __init__(self, name: str = "NyXX-World"):
+        self.name = name
+        self.organisms: List[Citizen] = []  # All citizens, including agents
+        self.markets = {}  # Market simulations
+        self.external_data_sources = []  # APIs, files, generated data
+        self.scenarios = []  # Optional global scenarios
 
-    def add_agent(self, agent):
-        """Method to add an agent to the environment."""
-        self.agents.append(agent)
-        print(f"Agent {agent.agent_id} added to the environment.")
-    
+        # Create a basic data source for initial learning
+        self.basic_data_source = BasicDataSource()
+
+        log_info(f"[{self.name}] Environment initialized.")
+
+    def add_organism(self, citizen: Citizen):
+        """
+        Add a new citizen (or agent) into the world.
+        """
+        if isinstance(citizen, Citizen):
+            self.organisms.append(citizen)
+            log_info(f"Citizen {citizen.name} (ID: {citizen.citizen_id}) entered {self.name}.")
+        else:
+            log_error("Only citizens (including agents) can be added to the environment.")
+
+    def step(self):
+        """
+        Advance the simulation one tick.
+        Each organism learns or acts depending on its current state.
+        Citizens learn from the environment in this step.
+        """
+        for organism in self.organisms:
+            if hasattr(organism, "learn"):
+                organism.learn(self)  # Pass the environment to the citizen for learning
+            if hasattr(organism, "act"):
+                organism.act()
 
     def add_market(self, market_name, market_data):
         """
-        Add a new market to the environment.
-        :param market_name: The name of the market (e.g., "CryptoMarket", "StockMarket").
-        :param market_data: The data related to the market (e.g., stock prices, market trends).
+        Add a market into the world for agents to interact with.
         """
         self.markets[market_name] = market_data
-        log_info(f"Market '{market_name}' added to the environment.")
+        log_info(f"Market '{market_name}' added to {self.name}.")
 
-    def remove_market(self, market_name):
+    def get_market(self, market_name):
         """
-        Remove a market from the environment.
-        :param market_name: The name of the market to remove.
-        """
-        if market_name in self.markets:
-            del self.markets[market_name]
-            log_info(f"Market '{market_name}' removed from the environment.")
-        else:
-            log_error(f"Market '{market_name}' not found in environment.")
-
-    def add_external_data_source(self, data_source):
-        """
-        Add a new external data source to the environment.
-        :param data_source: An external data provider (e.g., API endpoint, database connection).
-        """
-        self.external_data_sources.append(data_source)
-        log_info("External data source added to the environment.")
-
-    def add_scenario(self, scenario_name, scenario_data):
-        """
-        Add a new scenario for testing agents in the environment.
-        :param scenario_name: The name of the scenario (e.g., "MarketCrash", "HighDemand").
-        :param scenario_data: Data or conditions associated with the scenario.
-        """
-        self.scenarios.append((scenario_name, scenario_data))
-        log_info(f"Scenario '{scenario_name}' added to the environment.")
-
-    def simulate_event(self):
-        """
-        Simulate an event within the environment (e.g., market fluctuation, data update).
-        This could trigger agent actions or decisions.
-        """
-        event = random.choice(self.scenarios)
-        scenario_name, scenario_data = event
-        log_info(f"Simulating scenario: {scenario_name}. Data: {scenario_data}")
-        # Event simulation logic could trigger agent tasks
-        return scenario_name, scenario_data
-
-    def get_market_data(self, market_name):
-        """
-        Retrieve data for a specific market.
-        :param market_name: The name of the market (e.g., "CryptoMarket").
-        :return: Market data or None if not found.
+        Retrieve a market by name.
         """
         return self.markets.get(market_name, None)
 
+    def simulate_event(self):
+        """
+        Simulate a scenario, like a data shift or market change.
+        """
+        if self.scenarios:
+            scenario = random.choice(self.scenarios)
+            scenario_name, data = scenario
+            log_info(f"Simulating scenario: {scenario_name}")
+            return scenario_name, data
+        else:
+            log_info("No scenarios to simulate.")
+            return None
+
+    def add_external_data_source(self, source):
+        """
+        Add an external data source to the environment.
+        Citizens will use this to learn.
+        """
+        self.external_data_sources.append(source)
+        log_info("External data source added to environment.")
+
+    def run(self, steps: int = 1):
+        """
+        Run the simulation for a number of steps.
+        """
+        log_info(f"Starting simulation in {self.name} for {steps} steps.")
+        for _ in range(steps):
+            self.step()
+        log_info(f"Simulation completed.")
+
+    def get_random_fact(self):
+        """
+        Retrieve a random fact from the basic data source.
+        """
+        return self.basic_data_source.get_random_fact()

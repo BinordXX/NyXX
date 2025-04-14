@@ -10,6 +10,7 @@ NyXX/
 │   │   ├── trader.py          # Trader agent
 │   │   ├── researcher.py      # Researcher agent
 │   │   ├── analyst.py         # Analyst agent
+|...|...|__ citizen.py         #first citizen
 │   │   └── optimizer.py       # Optimizer agent
 │   ├── behavior/              # Behavior of agents (tasks, decisions, etc.)
 │   │   ├── __init__.py
@@ -20,7 +21,7 @@ NyXX/
 │       ├── __init__.py
 │       └── helpers.py         # Common helpers (e.g., random number generation, data parsing)
 │
-├── coremind/                  # Centralized intelligence for the system
+├── encephalon/                  # Centralized intelligence for the system
 │   ├── __init__.py
 │   ├── coremind.py            # CoreMind logic and decision-making
 │   ├── strategy.py            # High-level strategy formation and planning

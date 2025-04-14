@@ -1,9 +1,9 @@
 import unittest
-from agents.agent import Agent
-from agents.agent_types.trader import Trader
-from agents.agent_types.researcher import Researcher
-from agents.agent_types.analyst import Analyst
-from agents.agent_types.optimizer import Optimizer
+from organisms.agent import Agent
+from organisms.agents.trader import Trader
+from organisms.agents.researcher import Researcher
+from organisms.agents.analyst import Analyst
+from organisms.agents.optimizer import Optimizer
 
 class TestAgentMethods(unittest.TestCase):
     

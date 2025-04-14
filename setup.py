@@ -1,4 +1,3 @@
-# setup.py
 from setuptools import setup, find_packages
 
 setup(
@@ -7,11 +6,16 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        # Add any dependencies your project needs here
+        'numpy',           # Example external dependencies
+        'pandas',          # Add any required dependencies here
+        'scikit-learn',
     ],
+    extras_require={
+        'dev': ['pytest', 'black'],  # Development dependencies
+    },
     entry_points={
         'console_scripts': [
-            # Optional: command-line entry points
+            'nyxx-simulation = scripts.run_simulations:main',  # Make sure this matches your script
         ],
     },
 )
