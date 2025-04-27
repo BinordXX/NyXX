@@ -31,9 +31,4 @@ Career Pursuit: Each agent has a role to play in the larger system, from optimiz
 
 The motivation driving these agents is akin to the human race — the pursuit of self-betterment, knowledge, and contributing to the collective.
 
-💭 Personal Philosophy
-
-They say, “Don’t work for your money; make your money work for you.” However, not everyone starts with money. Since I do not have money, I am creating a digital workforce to work for me, earn for me, and continually evolve to increase its value.
-
-NyXX is my personal pursuit of creating an ecosystem that acts as my digital army, working relentlessly without sleep, distractions, or limitations. Through this project, I aim to cultivate a system where digital agents autonomously generate value, expanding their knowledge and capabilities to serve and benefit my goals — a workforce built to grow and adapt over time.
 
