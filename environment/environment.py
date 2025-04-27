@@ -87,7 +87,7 @@ class Environment:
             self.step()
         log_info(f"Simulation completed.")
 
-    def get_random_fact(self):
+    def get_random_facts(self):
         """
         Retrieve a random fact from the basic data source.
         """

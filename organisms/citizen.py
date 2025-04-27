@@ -27,6 +27,7 @@ class Citizen:
         self.logger = logging.getLogger(f"Citizen-{self.name}")
         self.logger.info(f"[{self.creation_time}] Citizen {self.name} initialized.")
         self.learning_enabled = True  # Flag to control if the citizen is still learning
+        self.role = None  # Role will be assigned when evolved
         
     def setup_logger(self):
         # Logger setup (if you need it)
@@ -49,14 +50,13 @@ class Citizen:
             return
 
         # Simulate learning from the environment
-        
-        data = environment.get_random_fact()  # Get a random fact from the environment
+        data = environment.get_random_facts()  # Get a random fact from the environment
         self.memory.append(data)
         self.knowledge[data] = self.knowledge.get(data, 0) + 1  # Increase knowledge of that fact
         self.logger.info(f"Citizen {self.name} learned: {data}. Knowledge: {self.knowledge[data]}")
 
         # Check if the citizen has learned enough to evolve
-        if sum(self.knowledge.values()) >= 3:  # Threshold for evolution (can be adjusted)
+        if sum(self.knowledge.values()) >= 5:  # Threshold for evolution (can be adjusted)
             self.status = "ready to evolve"
             self.learning_enabled = False  # Stop learning once threshold is reached
             self.logger.info(f"Citizen {self.name} has gained enough knowledge to evolve and will stop learning.")
@@ -68,7 +68,7 @@ class Citizen:
         """
         if self.status == "ready to evolve":
             self.logger.info(f"Citizen {self.name} is now taking action as an agent.")
-            # In the future, this is where the agent's role (e.g., Trader, Researcher) would begin.
+            self.evolve_and_assign_role()  # Ensure evolution and role assignment
             self.status = "evolved"
         else:
             self.logger.info(f"Citizen {self.name} is still idle, waiting to evolve.")
@@ -88,34 +88,34 @@ class Citizen:
             "id": self.citizen_id,
             "name": self.name,
             "age": self.age,
-            "role": self.role if hasattr(self, 'role') else None,  # Avoid error if no role assigned yet
+            "role": self.role if self.role else "None",  # Avoid error if no role assigned yet
             "status": self.status,
             "metadata": self.metadata
         }
+
     def evolve_and_assign_role(self):
         """
         Check if a citizen has gained enough knowledge to evolve. If so, assign a role and log the evolution.
         """
-        if sum(self.knowledge.values()) >= 3:  # Threshold for evolution
-            self.status = "evolved"
-            self.logger.info(f"Citizen {self.name} has gained enough knowledge to evolve.")
-            
-            # Assign a random role to the citizen once they evolve
-            roles = ['Trader', 'Researcher', 'Farmer', 'Medic', 'Engineer']
+        if self.status != "ready to evolve":
+            self.logger.info(f"Citizen {self.name} has not reached the threshold to evolve.")
+            return
 
-            if not roles:
-                self.logger.error("No roles available to assign!")
-                return
+        self.status = "evolved"
+        self.logger.info(f"Citizen {self.name} has evolved based on accumulated knowledge.")
 
-            # Randomly choose a role
-            self.role = random.choice(roles)
+        # Assign a random role to the citizen once they evolve
+        roles = ['Trader', 'Researcher', 'Farmer', 'Medic', 'Engineer']
 
-            # Log the assigned role
-            self.logger.info(f"Citizen {self.name} has evolved into a {self.role}.")
-        else:
-            self.logger.info(f"Citizen {self.name} has not gained enough knowledge to evolve.")
+        if not roles:
+            self.logger.error("No roles available to assign!")
+            return
 
- 
-        
+        # Randomly choose a role
+        self.role = random.choice(roles)
+
+        # Log the assigned role
+        self.logger.info(f"Citizen {self.name} has evolved into a {self.role}.")
+
     def __repr__(self):
-        return f"<Citizen name={self.name}, role={self.role if hasattr(self, 'role') else 'None'}, status={self.status}>"
+        return f"<Citizen name={self.name}, role={self.role if self.role else 'None'}, status={self.status}>"
